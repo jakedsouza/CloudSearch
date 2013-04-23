@@ -44,15 +44,6 @@ public class CloudSearchController {
 	}
 	
 	
-	public boolean isUserRegistered(@QueryParam("code") String code){
-		return false;
-		
-	}
-	
-	public User registerNewUser(){
-		return null;
-		
-	}
 	
 	public void getGoogleDriveAuthUrl(){
 		

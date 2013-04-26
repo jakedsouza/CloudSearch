@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -19,15 +21,21 @@ import com.cloudsearch.oauth.GoogleAuthHelper;
 @Path("/cloud")
 public class CloudSearchController {
 
+	private @Context HttpServletRequest request ;
 	/**
 	 * Gets the url for login for oauth
 	 * 
 	 * @return
 	 */
-	@GET
+	
+	public CloudSearchController(@Context HttpServletRequest request){
+		this.request = request;
+	}
+	
+	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/getLoginURL")
-	public String getLoginURL() {
+	public String getLoginURL(@Context HttpServletRequest request2) {
 		GoogleAuthHelper helper = new GoogleAuthHelper();
 		String url = helper.buildLoginUrl();
 		return url;
@@ -36,11 +44,11 @@ public class CloudSearchController {
 	@GET
 	@Path("/getUserInfo")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserInfo(@QueryParam("code") String code)
+	public User getUserInfo(@QueryParam("code") String code)
 			throws IOException {
 		GoogleAuthHelper helper = new GoogleAuthHelper();
-		String json = helper.getUserInfoJson(code);
-		return json;
+		User user = helper.getUserInfo(code);
+		return user;
 	}
 	
 	

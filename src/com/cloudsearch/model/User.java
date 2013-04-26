@@ -20,7 +20,7 @@ public class User {
 	String familyName;
 	@JsonProperty(value="link")
 	String link;
-	@JsonProperty(value="pinture")
+	@JsonProperty(value="picture")
 	String picture;
 	@JsonProperty(value="gender")
 	String gender;

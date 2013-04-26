@@ -14,7 +14,7 @@ public interface GenericDao< T > {
     long countAll(@SuppressWarnings("rawtypes") Map params);
 
     T create(T t);
-
+    
     void delete(Object id);
 
     T find(Object id);

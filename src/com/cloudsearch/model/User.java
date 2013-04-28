@@ -1,6 +1,5 @@
 package com.cloudsearch.model;
 
-import com.owlike.genson.annotation.Creator;
 import com.owlike.genson.annotation.JsonProperty;
 
 public class User {

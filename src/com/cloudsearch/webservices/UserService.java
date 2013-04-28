@@ -14,6 +14,7 @@
 
 package com.cloudsearch.webservices;
 
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.model.RequestModel;
 import com.cloudsearch.oauth.CredentialMediator;
 import com.cloudsearch.oauth.CredentialMediator.NoRefreshTokenException;
@@ -21,12 +22,8 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Userinfo;
-import com.google.gson.Gson;
-
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -48,7 +45,7 @@ public class UserService extends CloudSearchService {
 	 */
 	@GET
 	@Path("/getUserInfo")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
 	public String getUserInfo(@QueryParam("state") String state,
 			@QueryParam("userId") String userId,
 			@QueryParam("code") String code, @QueryParam("email") String email)
@@ -66,9 +63,11 @@ public class UserService extends CloudSearchService {
 			Userinfo about = service.userinfo().get().execute();
 			about.setId(CredentialMediator.modifyUserIdByScope(about.getId(),
 					USER_SCOPES));
+			System.out.println(about.toString());
 			// httpResponse.setContentType(JSON_MIMETYPE);
 			// httpResponse.getWriter().print(new Gson().toJson(about));
-			return new Gson().toJson(about);
+			return about.toString();
+			//return new Gson().toJson(about);
 		} catch (GoogleJsonResponseException e) {
 			if (e.getStatusCode() == 401) {
 				// The user has revoked our token or it is otherwise bad.

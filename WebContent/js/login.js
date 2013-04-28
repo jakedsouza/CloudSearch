@@ -27,16 +27,16 @@ window.onload = function() {
 
 
 
-function decideLoginType() {
-	var uri = document.URL;
-	var result = parseUri(uri);
-	var code = result.queryKey.code;
-	if (localStorage.email != null && localStorage.userId != null) {
-		login(localStorage.email, localStorage.userId, null);
-	} else if (code != null) {
-		login(null, null, code);
-	}
-}
+//function decideLoginType() {
+//	var uri = document.URL;
+//	var result = parseUri(uri);
+//	var code = result.queryKey.code;
+//	if (localStorage.email != null && localStorage.userId != null) {
+//		login(localStorage.email, localStorage.userId, null);
+//	} else if (code != null) {
+//		login(null, null, code);
+//	}
+//}
 
 function login(email, userId, code) {
 	$.ajax({

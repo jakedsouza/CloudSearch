@@ -15,8 +15,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.owlike.genson.Genson;
 import com.owlike.genson.TransformationException;
-import com.owlike.genson.stream.JsonType;
-
 import java.io.IOException;
 import java.util.Arrays;
 

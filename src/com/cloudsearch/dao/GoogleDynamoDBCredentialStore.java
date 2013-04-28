@@ -60,8 +60,8 @@ public class GoogleDynamoDBCredentialStore implements CredentialStore {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		GoogleDynamoDBPersistedCredential credential = new GoogleDynamoDBPersistedCredential("1","1","1",(long)1 );
-		GoogleDynamoDBCredentialStore store = new GoogleDynamoDBCredentialStore();
+	//	GoogleDynamoDBPersistedCredential credential = new GoogleDynamoDBPersistedCredential("1","1","1",(long)1 );
+	//	GoogleDynamoDBCredentialStore store = new GoogleDynamoDBCredentialStore();
 		//store.load("105248847399825755850", credential);		
 	}
 

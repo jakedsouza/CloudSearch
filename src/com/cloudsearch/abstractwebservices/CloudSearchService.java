@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.cloudsearch.webservices;
+package com.cloudsearch.abstractwebservices;
 
 import com.cloudsearch.model.RequestModel;
 import com.cloudsearch.model.ResponseModel;
@@ -24,8 +24,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.sun.research.ws.wadl.Response;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -33,8 +31,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 
 /**
@@ -85,14 +81,13 @@ public abstract class CloudSearchService {
 	// ThreadLocal<HttpServletRequest> reqT;
 	// protected @Context
 	// ThreadLocal<HttpServletResponse> resT;
-	protected @Context
+	public @Context
 	ServletContext context;
 
 	protected ResponseModel sendError(int code, String message) {
 		return new ResponseModel(code, message);
 	}
-
-	protected InputStream getClientSecretsStream() {
+	public InputStream getClientSecretsStream() {
 		return context.getResourceAsStream(CLIENT_SECRETS_FILE_PATH);
 	}
 

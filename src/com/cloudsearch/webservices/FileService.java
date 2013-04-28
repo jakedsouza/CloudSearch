@@ -1,11 +1,19 @@
 package com.cloudsearch.webservices;
 
-import com.cloudsearch.model.ClientFile;
+import java.io.IOException;
+import java.util.Scanner;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.model.RequestModel;
 import com.cloudsearch.oauth.CredentialMediator.NoRefreshTokenException;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.services.drive.Drive;
@@ -13,21 +21,6 @@ import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.Drive.Files.List;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.util.Map;
-import java.util.Scanner;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 /**
  * Servlet providing a small API for the DrEdit JavaScript client to use in
@@ -223,11 +216,11 @@ public class FileService extends CloudSearchService {
 			return "";
 		}
 	}
-
-	private Map<String, String> returnDriveInfo() {
-		return null;
-
-	}
+//
+//	private Map<String, String> returnDriveInfo() {
+//		return null;
+//
+//	}
 
 	/**
 	 * Build and return a Drive service object based on given request

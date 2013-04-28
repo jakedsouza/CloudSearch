@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.TokenResponse;
-import com.google.api.client.auth.oauth2.Credential.AccessMethod;
 import com.google.api.client.auth.oauth2.CredentialStore;
 import com.google.api.client.extensions.java6.auth.oauth2.FileCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;

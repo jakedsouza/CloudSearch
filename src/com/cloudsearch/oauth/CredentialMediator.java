@@ -14,12 +14,11 @@
 
 package com.cloudsearch.oauth;
 
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.dao.GoogleDynamoDBCredentialStore;
 import com.cloudsearch.model.RequestModel;
-import com.cloudsearch.webservices.CloudSearchService;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.CredentialStore;
-import com.google.api.client.auth.oauth2.MemoryCredentialStore;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -35,7 +34,6 @@ import com.google.api.services.oauth2.model.Userinfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Object that manages credentials associated with this Drive application and
@@ -103,7 +101,7 @@ public class CredentialMediator {
     this.scopes = scopes;
     if(credentialStore  == null){
     	//this.credentialStore = new MemoryCredentialStore();
-    	this.credentialStore = new GoogleDynamoDBCredentialStore();
+    	credentialStore = new GoogleDynamoDBCredentialStore();
     }
     try {
       secrets = GoogleClientSecrets.load(

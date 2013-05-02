@@ -1,19 +1,13 @@
 $(document).ready(function() {
 	decideLoginType();
 });
-
-
-
-
 function AppViewModel() {
-	// data
 	
 	var self = this;
-	 this.people = [
-	                { name: 'Franklin', credits: 250 },
-	                { name: 'Mario', credits: 5800 }
-	            ];	self.projectName = 'CloudSearch';
+	self.projectName = 'CloudSearch';
 	self.isUserLoggedIn = ko.observable(false);
+	
+	// user info 
 	self.birthday = ko.observable();
 	self.email = ko.observable();
 	self.family_name = ko.observable();
@@ -25,17 +19,21 @@ function AppViewModel() {
 	self.name = ko.observable();
 	self.picture = ko.observable();
 	self.verified_email = ko.observable();
+	
+	// applications connected
+	self.isGoogleDriveConnected = function(a){
+//		debugger;
+//		if(localStorage.gDriveuserId == null ){
+//			return 'btn ';
+//		}else if(localStorage.gDriveuserId != null && localStorage.email != null ){
+//			return 'btn btn-danger';
+//		}		
+	};
+	
+	
+	
 	// pages
 	self.chosenPage = ko.observable();
-//	self.gotoSettings = function() {
-//		self.chosenPage('settings');
-//		location.hash = self.chosenPage();
-//	};
-//	self.gotoLogin = function(data,page) {
-//		alert(page);
-//		self.chosenPage('login');
-//		location.hash = self.chosenPage();
-//	};
 	self.gotoPage = function(b){
 		console.log("Going to page " + b);
 		self.chosenPage(b);
@@ -49,6 +47,12 @@ function AppViewModel() {
 	};
 	self.logout = function() {
 		logout();
+	};
+	self.loginGoogleDrive = function(a){
+		loginGoogleDrive(null,null,null);
+	};
+	self.logoutGoogleDrive = function(){
+		//TODO
 	};
 
 	self.updateUserInfo = function(data) {
@@ -64,11 +68,11 @@ function AppViewModel() {
 		self.picture(data.picture);
 		self.verified_email(data.verified_email);
 	};
+	
 };
 var model = new AppViewModel();
 ko.applyBindings(model);
 
-model.gotoPage('login');
 model.chosenPage.subscribe(function(newValue) {
 //	alert(newValue);
 });

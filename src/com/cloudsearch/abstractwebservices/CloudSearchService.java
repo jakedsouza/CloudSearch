@@ -24,6 +24,10 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -65,10 +69,10 @@ public abstract class CloudSearchService {
 	public static final List<String> DRIVE_SCOPE = Arrays.asList(
 	// Required to access and manipulate files.
 	// "https://www.googleapis.com/auth/drive.file",
-			"https://www.googleapis.com/auth/drive"// ,
+			"https://www.googleapis.com/auth/drive",
 			// Required to identify the user in our data store.
-			// "https://www.googleapis.com/auth/userinfo.email",
-			// "https://www.googleapis.com/auth/userinfo.profile"
+			 "https://www.googleapis.com/auth/userinfo.email",
+			 "https://www.googleapis.com/auth/userinfo.profile"
 			);
 
 	public static final List<String> USER_SCOPES = Arrays.asList(
@@ -87,7 +91,8 @@ public abstract class CloudSearchService {
 	protected ResponseModel sendError(int code, String message) {
 		return new ResponseModel(code, message);
 	}
-	public InputStream getClientSecretsStream() {
+	public InputStream getClientSecretsStream() throws FileNotFoundException {
+		//return new FileInputStream(new File("client_secrets.json"));
 		return context.getResourceAsStream(CLIENT_SECRETS_FILE_PATH);
 	}
 

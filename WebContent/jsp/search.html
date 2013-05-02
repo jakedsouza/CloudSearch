@@ -1,0 +1,31 @@
+<!-- Main Search Container -->
+<!-- 	Main Container -->
+<div class="container"
+	data-bind="visible: isUserLoggedIn() && chosenPage() === 'main'">
+	<div class="row offset3">
+		<form class="navbar-search form-search ">
+			<div class="input-append">
+				<input type="text" class="span4" placeholder="Search">
+				<button type="button" class="btn">
+					<i class="icon-search"></i>
+				</button>
+			</div>
+		
+		</form>
+		<div class="btn-group">
+  <button type="button" class="btn">
+					<i class="icon-search"></i>
+				</button>
+  <button class="btn dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>Drive</li>
+    <li></li>
+    <li></li>
+  </ul>
+</div>
+	</div>
+</div>
+<!-- /container -->
+<!-- /Main Search Container -->

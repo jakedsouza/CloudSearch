@@ -1,0 +1,172 @@
+<!-- Settings Container -->
+<div class="container"
+	data-bind="visible: isUserLoggedIn() && chosenPage() === 'settings'">
+	<!-- 	<div class="container"> -->
+
+	<div class="row settings-row ">
+		<button type="btn" class="close" data-dismiss="modal"
+			aria-hidden="true"
+			data-bind="click: gotoPage.bind($data, 'main', 'param2')">×</button>
+
+		<div>
+			<h3 class="text-center">Add Accounts</h3>
+		</div>
+
+		<!-- 		Google Drive Card -->
+
+<!-- 		<div class="settings-card"> -->
+<!-- 			<div class="media"> -->
+<!-- 				<span class="pull-left"> <img class="media-object" -->
+<!-- 					src="img/google_drive_48.png"> -->
+<!-- 				</span> -->
+<!-- 				<div class="media-body"> -->
+<!-- 					<h4 class="media-heading">Google Drive</h4> -->
+<!-- 					<div> -->
+<!-- 						<a id="connectGoogleDrive" class="btn" -->
+<!-- 							data-bind="click: loginGoogleDrive.bind($element),css:isGoogleDriveConnected.bind($element)"><i -->
+<!-- 							class="icon-plus-sign"></i> Connect</a> -->
+<!-- 					</div> -->
+<!-- 					<div>Google’s file storage and synchronization service.</div> -->
+<!-- 					Settings</a> -->
+<!-- 					</li> -->
+
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+		<!-- 		End Google Drive Card -->
+				<!-- 		Google Drive Card-->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/google_drive_48.png">
+				</span>
+				<div class="media-body ">
+					<h4 class="media-heading">Google Drive	</h4>
+					<div>
+						<a id="connectDropbox" class="btn " data-bind="click: loginGoogleDrive.bind($element),css:isGoogleDriveConnected.bind($element)"><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>Google’s file storage and synchronization service.</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 		End Google Drive Card  -->
+		<!-- 		Drop Box Card -->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/dropbox_48_2.png">
+				</span>
+				<div class="media-body">
+					<h4 class="media-heading">Dropbox</h4>
+					<div>
+						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>Dropbox file storage and synchronization service.</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 		End Drop Box Card -->
+		<!-- 		Drop Box Card -->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/gmail-icon.png">
+				</span>
+				<div class="media-body">
+					<h4 class="media-heading">Gmail</h4>
+					<div>
+						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>Dropbox file storage and synchronization service.</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 		End Drop Box Card -->
+		<!-- 		Drop Box Card -->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/google_contacts.png">
+				</span>
+				<div class="media-body">
+					<h4 class="media-heading">Google Contacts</h4>
+					<div>
+						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>Dropbox file storage and synchronization service.</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 		End Drop Box Card -->
+		<!-- 		Drop Box Card -->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/evernote.png">
+				</span>
+				<div class="media-body">
+					<h4 class="media-heading">Evernote</h4>
+					<div>
+						<a id="connectDropbox" class="btn"><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>Dropbox file storage and synchronization service.</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 		End Drop Box Card -->
+
+		<!-- 		Drop Box Card -->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/github_icon.png">
+				</span>
+				<div class="media-body">
+					<h4 class="media-heading">Github</h4>
+					<div>
+						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>GitHub is the best place to share code with friends, co-workers, classmates</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 		End Drop Box Card -->
+		<!-- 		Drop Box Card -->
+		<div class="settings-card tile bg-color-blueDark">
+			<div class="media">
+				<span class="pull-left"> <img class="media-object"
+					src="img/icloud.png">
+				</span>
+				<div class="media-body">
+					<h4 class="media-heading">iCloud</h4>
+					<div>
+						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
+							Connect</a>
+					</div>
+					<div>Dropbox file storage and synchronization service.</div>
+				</div>
+			</div>
+		</div>
+		<!-- 		End Drop Box Card -->
+	 	<div class="row span12 ">
+	 
+		<div class="text-center">
+			<a class="btn btn-large"
+				data-bind="click: gotoPage.bind($data, 'main', 'param2')">Close</a>
+		</div>
+		</div>
+</div>
+</div>
+<!-- /Settings Container -->

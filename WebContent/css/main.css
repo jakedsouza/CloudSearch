@@ -16,7 +16,7 @@ body {
 	max-width: 300px;
 	padding: 19px 29px 29px;
 	margin: 10% 300px 20px;
-	background-color: #3F3F45;
+	
 	border: 1px solid #e5e5e5;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -59,19 +59,23 @@ body {
 .settings-card {
 /* 	-webkit-box-shadow: 1px 1px 1px 1px #e5e5e5; */
 /* 	background-color: #ffffff; */
-/* 	box-shadow: 1px 1px 1px 1px #e5e5e5; */
+	box-shadow: 1px 1px 1px 1px #e5e5e5;
 /*  margin:10px;	  */
 box-shadow: inset 0px 1px 2px #ccc;
 outline: none;
 display: inline-block;
 margin: 10px;
-background-color: #ececec;
-box-shadow: inset 0px 1px 2px #fff;
-border: 1px solid #ccc;
-border-radius: 3px;
+  box-shadow:inset 0px 0px 1px #ffc;
+
+/* background-color: #ececec; */
+/* box-shadow: inset 0px 1px 2px #fff; */
+/* border: 1px solid #ccc; */
+/* border-radius: 3px; */
 width:250px;
 height:150px;
+color:#FFFFFF;
 }
+
 
 .media{
 	padding:15px;

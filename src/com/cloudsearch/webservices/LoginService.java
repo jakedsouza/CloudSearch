@@ -36,6 +36,7 @@ public class LoginService extends CloudSearchService {
 		code = (code.equals("")) ? null : code;
 		email = (email.equals("")) ? null : email;
 		userId = (userId.equals("")) ? null : userId;
+		state = (state.equals("")) ? null : state;
 	//	scope = (scope.equals("")) ? null : scope;
 
 		RequestModel httpRequest = new RequestModel(state, userId, code, email);

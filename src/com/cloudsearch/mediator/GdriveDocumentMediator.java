@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import com.cloudsearch.model.RequestModel;
 import com.cloudsearch.oauth.CredentialMediator.NoRefreshTokenException;
 import com.cloudsearch.webservices.FileService;
 import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
@@ -45,79 +47,85 @@ import com.google.api.services.drive.model.FileList;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
+import com.owlike.genson.Genson;
+import com.owlike.genson.reflect.VisibilityFilter;
 
 public class GdriveDocumentMediator {
 
 	private Drive drive;
 	private String userID;
-	private static Set<String> ALLOWED_EXTENSIONS = Sets.newHashSet("pdf",
-			"docx", "txt", "doc", "ppt", "txt", "xml");
 	private static Set<String> GET_ALL_MIME = new HashSet<String>();
-	private static Set<String> ALLOWED_MIME_TYPES = Sets
-			.newHashSet(
-					"text/html",
-					"text/plain",
-					"application/rtf",
-					"application/vnd.oasis.opendocument.text",
-					"application/pdf",
-					"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-					"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-					"application/x-vnd.oasis.opendocument.spreadsheet",
-					"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-					"application/vnd.oasis.opendocument.text",
-					"application/x-vnd.oasis.opendocument.spreadsheet");
 
-	final CharMatcher ALNUM = CharMatcher.inRange('a', 'z')
-			.or(CharMatcher.inRange('A', 'Z'))
-			.or(CharMatcher.inRange('0', '9')).precomputed();
-
-	private static int DOCID;
+	// retains alphabets, numbers and whitespaces
+	private static CharMatcher matcher = CharMatcher.inRange('a', 'z')
+			.or(CharMatcher.inRange('A', 'Z')).or(CharMatcher.is(' '))
+			.or(CharMatcher.inRange('0', '9'))
+			.or(CharMatcher.BREAKING_WHITESPACE).precomputed();
 
 	public GdriveDocumentMediator(Drive drive, String userID) {
 		this.drive = drive;
 		this.userID = userID.toLowerCase();
+
 	}
 
 	public ArrayList<GdriveDocument> createIndexableDocuments() {
-		ArrayList<GdriveDocument> resultList = new ArrayList<>();
-
+		ArrayList<GdriveDocument> resultList = new ArrayList<GdriveDocument>();
 		// get all users files
 		List<File> allFiles = getAllFiles();
-		
 		// for each file convert into gdrivedocument and set data
 		for (File file : allFiles) {
-
 			GdriveDocument document = new GdriveDocument(file);
-			if (isFileDownloadable(file)) {
-				InputStream stream = getFileStream(file);
-				document.setData(downloadFile(stream));
-			}
+			// if (isDownloadable(file)) {
+			// InputStream stream = getFileStream(file);
+			// document.setData(downloadFile(stream));
+			// }
 			resultList.add(document);
 		}
-
 		return resultList;
 	}
 
 	public List<File> getAllFiles() {
 		List<File> result = new ArrayList<File>();
-		FileComparator comparator = new FileComparator();
-		TreeSet<File> resultSet = new TreeSet<File>(comparator);
-
+		// FileComparator comparator = new FileComparator();
+		// TreeSet<File> resultSet = new TreeSet<File>(comparator);
+		// HashSet<File> resultSet = new HashSet<File>();
+		// HashMap<String, File> hashMap = new HashMap<String,File>();
 		Files.List request = null;
 		long time = System.currentTimeMillis();
+		try {
+			request = drive.files().list();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		do {
 			try {
-				request = drive.files().list();
-				
-				// request.setMaxResults(450);
+				// System.out.println("Current size :" + result.size());
+
+				// request.setMaxResults(999);
 				// request.setMaxResults(Integer.MAX_VALUE);
 				FileList files = request.execute();
 				result.addAll(files.getItems());
-				
-				request.setPageToken(files.getNextPageToken());
+				// resultSet.addAll(files.getItems());
+				// List<File> list = files.getItems();
+				// for (File file : list) {
+				// hashMap.put(file.getId(),file);
+				// }
 				System.out.println(result.size());
-//				if (resultSet.size() > 3000)
-//					break;
+				request.setPageToken(files.getNextPageToken());
+				// System.out.println(resultSet.last().getTitle());
+				System.out.println(result.size());
+				// if (result.size() > 1500){
+				// System.out.println("emptying duplicates");
+				// System.out.println("Initial size - " + result.size());
+				// boolean ch = resultSet.addAll(result);
+				// System.out.println(ch);
+				// result = new ArrayList<File>();
+				// //result.clear();
+				// System.out.println("new size - " + resultSet.size());
+				// }
+
 			} catch (IOException e) {
 				System.out.println("An error occurred: " + e);
 				request.setPageToken(null);
@@ -126,13 +134,10 @@ public class GdriveDocumentMediator {
 				&& request.getPageToken().length() > 0);
 		System.out.println("Time to get all files "
 				+ (System.currentTimeMillis() - time));
-		resultSet.addAll(result);
-		System.out.println(result.size());
-		System.out.println(resultSet.size());
-		result.clear();
-		result.addAll(resultSet);
-		System.out.println(result.size());
-		System.out.println(resultSet.size());
+		// resultSet.addAll(result);
+		// result.clear();
+		// result.addAll(resultSet);
+		// result.addAll(hashMap.values());
 		return result;
 	}
 
@@ -140,19 +145,15 @@ public class GdriveDocumentMediator {
 		File file = null;
 		try {
 			file = drive.files().get(fileId).execute();
-
-			System.out.println("Title: " + file.getTitle());
-			System.out.println("Description: " + file.getDescription());
-			System.out.println("MIME type: " + file.getMimeType());
 		} catch (IOException e) {
 			System.out.println("An error occured: " + e);
 		}
 		return file;
 	}
 
-	public String downloadFile(InputStream input) {
+	public String getFileData(InputStream input) {
 		if (input == null) {
-			return "";
+			return null;
 		}
 
 		BodyContentHandler textHandler = new BodyContentHandler(-1);
@@ -162,18 +163,12 @@ public class GdriveDocumentMediator {
 		try {
 			parser.parse(input, textHandler, metadata, contxt);
 			input.close();
-		} catch (IOException | SAXException | TikaException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println("Title: " + metadata.get("title"));
 		System.out.println("Author: " + metadata.get("Author"));
-
-		// retains alphabets, numbers and whitespaces
-		CharMatcher matcher = CharMatcher.inRange('a', 'z')
-				.or(CharMatcher.inRange('A', 'Z')).or(CharMatcher.is(' '))
-				.or(CharMatcher.inRange('0', '9'))
-				.or(CharMatcher.BREAKING_WHITESPACE).precomputed();
 
 		String alphaAndDigits = matcher.retainFrom(textHandler.toString());
 		alphaAndDigits.toLowerCase();
@@ -185,27 +180,10 @@ public class GdriveDocumentMediator {
 		return alphaAndDigits;
 	}
 
-	public InputStream getFileStream(File file) {
-		String url = null;
-		if (file.getDownloadUrl() == null
-				|| file.getDownloadUrl().length() <= 0) {
-			Map<String, String> exportLinks = file.getExportLinks();
-			if (exportLinks != null) {
-				for (String type : ALLOWED_MIME_TYPES) {
-					if (exportLinks.containsKey(type)) {
-						url = exportLinks.get(type);
-					}
-				}
-			}
-			// System.out.println(exportLinks);
-		} else {
-			url = file.getDownloadUrl();
-		}
+	public InputStream getFileStream(String url) {
 		if (url == null) {
 			return null;
 		}
-		// if (file.getDownloadUrl() != null && file.getDownloadUrl().length() >
-		// 0) {
 		HttpResponse resp = null;
 		try {
 			resp = drive.getRequestFactory()
@@ -216,47 +194,54 @@ public class GdriveDocumentMediator {
 			e.printStackTrace();
 			return null;
 		}
-		// finally {
-		// try {
-		// if (resp != null)
-		// resp.disconnect();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
-		// } else {
-		// // The file doesn't have any content stored on Drive.
-		// return null;
-		// }
 	}
 
-	public boolean isFileDownloadable(File file) {
-		String mimeType = file.getMimeType().toLowerCase();
-		// Long size = file.getFileSize();
-		// size = size / (1024 * 1024);
-
-		boolean isValidMIME = (ALLOWED_MIME_TYPES.contains(mimeType)) ? true
-				: false;
-		// boolean isValidSize = size < 100 ? true : false;
-		// return (isValidMIME);
-		return true;
-		// return (isValidSize & isValidMIME);
+	public boolean isDownloadable(String mimetype) {
+		String mimeType = mimetype.toLowerCase();
+		boolean isValidMIME = (GdriveDocument.ALLOWED_MIME_TYPES
+				.contains(mimeType)) ? true : false;
+		return isValidMIME;
 	}
 
-	public void sendToSearchEngine(GdriveDocument document){
+	public void sendToSearchEngine(java.util.List<GdriveDocument> documents) {
+		if (documents == null) {
+			return;
+		}
+		for (GdriveDocument gdriveDocument : documents) {
+			sendToSearchEngine(gdriveDocument);
+		}
+	}
+
+	public GdriveDocument updateData(GdriveDocument document) {
+		if (document.getData() != null) {
+			return document;
+		}
+		String url = document.getComputedDownloadURL();
+		if (isDownloadable(document.getMimeType())) {
+			InputStream input = getFileStream(url);
+			String data = getFileData(input);
+			document.setData(data);
+		}
+		return document;
+	}
+
+	public void sendToSearchEngine(GdriveDocument document) {
 		try {
 			String url = "http://localhost:9200/";
-			url = url + userID + "/user/" + DOCID;
-			DOCID += 1;
+			url = url + userID + "/user/" + document.getId();
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpPut postRequest = new HttpPut(url);
-			
-			StringEntity input = new StringEntity(new Gson().toJson(document));
+			HttpPut putRequest = new HttpPut(url);
+			Genson genson = new Genson.Builder().setUseGettersAndSetters(false).setFieldFilter(VisibilityFilter.ALL).create();
+			// genson.serialize(document);
+			// StringEntity input = new StringEntity(new
+			// Gson().toJson(document));
+			String doc = genson.serialize(document);
+			StringEntity input = new StringEntity(genson.serialize(document));
 			input.setContentType("application/json");
-			postRequest.setEntity(input);
+			putRequest.setEntity(input);
 
-			org.apache.http.HttpResponse response = httpClient.execute(postRequest);
+			org.apache.http.HttpResponse response = httpClient
+					.execute(putRequest);
 
 			if (response.getStatusLine().getStatusCode() != 201) {
 				// throw new RuntimeException("Failed : HTTP error code : "
@@ -265,7 +250,6 @@ public class GdriveDocumentMediator {
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(response.getEntity().getContent())));
-
 			String output;
 			System.out.println("Output from Server .... \n");
 			while ((output = br.readLine()) != null) {
@@ -308,12 +292,4 @@ public class GdriveDocumentMediator {
 		// System.out.println(GET_ALL_MIME);
 	}
 
-	public void sendToSearchEngine(java.util.List<GdriveDocument> documents) {
-		if(documents == null){
-			return ;
-		}
-		for (GdriveDocument gdriveDocument : documents) {
-			sendToSearchEngine(gdriveDocument);
-		}
-	}
 }

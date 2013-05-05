@@ -1,5 +1,5 @@
 <!-- Settings Container -->
-<div class="container"
+<div id="settings" class="container appviewmodel"
 	data-bind="visible: isUserLoggedIn() && chosenPage() === 'settings'">
 	<!-- 	<div class="container"> -->
 
@@ -13,28 +13,6 @@
 		</div>
 
 		<!-- 		Google Drive Card -->
-
-<!-- 		<div class="settings-card"> -->
-<!-- 			<div class="media"> -->
-<!-- 				<span class="pull-left"> <img class="media-object" -->
-<!-- 					src="img/google_drive_48.png"> -->
-<!-- 				</span> -->
-<!-- 				<div class="media-body"> -->
-<!-- 					<h4 class="media-heading">Google Drive</h4> -->
-<!-- 					<div> -->
-<!-- 						<a id="connectGoogleDrive" class="btn" -->
-<!-- 							data-bind="click: loginGoogleDrive.bind($element),css:isGoogleDriveConnected.bind($element)"><i -->
-<!-- 							class="icon-plus-sign"></i> Connect</a> -->
-<!-- 					</div> -->
-<!-- 					<div>Google’s file storage and synchronization service.</div> -->
-<!-- 					Settings</a> -->
-<!-- 					</li> -->
-
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-		<!-- 		End Google Drive Card -->
-				<!-- 		Google Drive Card-->
 		<div class="settings-card tile bg-color-blueDark">
 			<div class="media">
 				<span class="pull-left"> <img class="media-object"
@@ -43,8 +21,9 @@
 				<div class="media-body ">
 					<h4 class="media-heading">Google Drive	</h4>
 					<div>
-						<a id="connectDropbox" class="btn " data-bind="click: loginGoogleDrive.bind($element),css:isGoogleDriveConnected.bind($element)"><i class="icon-plus-sign"></i>
-							Connect</a>
+						<a id="connectGoogleDrive" data-bind="click: loginGoogleDrive , css:gdBtnClass()"><i data-bind="css: gdIconClass()"></i>
+						<span data-bind="text: gdBtnText()"></span>
+						</a>
 					</div>
 					<div>Google’s file storage and synchronization service.</div>
 

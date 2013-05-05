@@ -1,0 +1,103 @@
+{
+    "user": {
+        "properties": {
+            "alternateLink": {
+                "type": "string"
+            },
+            "computedDownloadURL": {
+                "type": "string"
+            },
+            "createdDate": {
+                "dynamic": "true",
+                "properties": {
+                    "dateOnly": {
+                        "type": "boolean"
+                    },
+                    "timeZoneShift": {
+                        "type": "long"
+                    },
+                    "value": {
+                        "type": "long"
+                    }
+                }
+            },
+            "data": {
+                "type": "string",
+                "index": "analysed",
+                "boost": 5
+            },
+            "downloadURL": {
+                "type": "string"
+            },
+            "exportLinks": {
+                "dynamic": "true",
+                "properties": {
+                    "application/pdf": {
+                        "type": "string"
+                    },
+                    "application/rtf": {
+                        "type": "string"
+                    },
+                    "application/vnd.oasis.opendocument.text": {
+                        "type": "string"
+                    },
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
+                        "type": "string"
+                    },
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                        "type": "string"
+                    },
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
+                        "type": "string"
+                    },
+                    "application/x-vnd.oasis.opendocument.spreadsheet": {
+                        "type": "string"
+                    },
+                    "text/html": {
+                        "type": "string"
+                    },
+                    "text/plain": {
+                        "type": "string"
+                    }
+                }
+            },
+            "fileExtension": {
+                "type": "string"
+            },
+            "iconLink": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string"
+            },
+            "mimeType": {
+                "type": "string"
+            },
+            "modifiedDate": {
+                "dynamic": "true",
+                "properties": {
+                    "dateOnly": {
+                        "type": "boolean"
+                    },
+                    "timeZoneShift": {
+                        "type": "long"
+                    },
+                    "value": {
+                        "type": "long"
+                    }
+                }
+            },
+            "thumbnailLink": {
+                "type": "string"
+            },
+            "title": {
+                "type": "string",
+                "index": "analysed",
+                "boost": 10
+            },
+            "type": {
+                "type": "string"
+            }
+        }
+    }
+}

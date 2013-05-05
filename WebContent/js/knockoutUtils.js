@@ -28,36 +28,37 @@ function decideLoginType() {
 	var result = parseUri(uri);
 	var code = result.queryKey.code;
 	var state = result.queryKey.state;
-	if(result.query===""){
+	if (result.query === "") {
 		model.gotoPage('login');
 	}
-	if(state == null){
+	if (state == null) {
 		state = 'login';
 	}
-	
-		switch (state) {
-		case 'login':
-			debugger;
-			if (localStorage.email != null && localStorage.userId != null) {
-				login(localStorage.email, localStorage.userId, null);
-			} else if(code != null){
-				login(null, null, code);
-			}
-			break;
-		case 'gdrive':
-			debugger;
-			if (localStorage.email != null && localStorage.gDriveuserId != null) {
-				loginGoogleDrive(localStorage.email, localStorage.gDriveuserId, null);
-			} else if(code != null){
-				loginGoogleDrive(null, null, code);
-			}else{
-				model.gotoPage('settings');
-			}
-			break;
-		default:
-			debugger;
+
+	switch (state) {
+	case 'login':
+	//	debugger;
+		if (localStorage.email != null && localStorage.userId != null) {
+			login(localStorage.email, localStorage.userId, null);
+		} else if (code != null) {
+			login(null, null, code);
 		}
-	
+		break;
+	case 'gdrive':
+	//	debugger;
+		if (localStorage.email != null && localStorage.gDriveuserId != null) {
+			loginGoogleDrive(localStorage.email, localStorage.gDriveuserId,
+					null);
+		} else if (code != null) {
+			loginGoogleDrive(null, null, code);
+		} else {
+			model.gotoPage('settings');
+		}
+		break;
+	default:
+	//	debugger;
+	}
+
 	// if (localStorage.email != null && localStorage.userId != null) {
 	// login(localStorage.email, localStorage.userId, null);
 	// } else if (code != null) {
@@ -87,7 +88,7 @@ function login(email, userId, code) {
 
 					model.isUserLoggedIn(true);
 					window.history.pushState('', 'CloudSearch Login',
-							'/CloudSearch/');
+							'/');
 					model.gotoPage('main');
 
 					// window.location = successFullLoginUrl;
@@ -97,6 +98,11 @@ function login(email, userId, code) {
 	});
 };
 function loginGoogleDrive(email, gDriveuserId, code) {
+
+	model.isUserLoggedIn(true);
+	window.history.pushState('', 'CloudSearch Login', '/#settings');
+	model.gotoPage('settings');
+	model.updateGDdata('refresh');
 	$.ajax({
 		type : 'GET',
 		url : 'rest/file/index',
@@ -118,13 +124,14 @@ function loginGoogleDrive(email, gDriveuserId, code) {
 
 					model.isUserLoggedIn(true);
 					window.history.pushState('', 'CloudSearch Login',
-							'/CloudSearch/#settings');
-					model.gotoPage('settings');
-
+							'/#settings');
+					//model.gotoPage('settings');
+					model.updateGDdata('connected');
 					// window.location = successFullLoginUrl;
 				}
 			}
 		}
+
 	});
 }
 function logout() {

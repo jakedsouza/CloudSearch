@@ -1,4 +1,3 @@
-
 /*!
  *  Font Awesome 3.0.2
  *  the iconic font designed for use with Twitter Bootstrap
@@ -24,7 +23,7 @@
 @font-face {
   font-family: 'FontAwesome';
   src: url('../font/fontawesome-webfont.eot?v=3.0.1');
-  src: url('../font/fontawesome-webfont.eot?#iefix&amp;v=3.0.1') format('embedded-opentype'),
+  src: url('../font/fontawesome-webfont.eot?#iefix&v=3.0.1') format('embedded-opentype'),
     url('../font/fontawesome-webfont.woff?v=3.0.1') format('woff'),
     url('../font/fontawesome-webfont.ttf?v=3.0.1') format('truetype');
   font-weight: normal;
@@ -53,18 +52,18 @@
 }
 /* more sprites.less reset */
 .icon-white,
-.nav-pills &gt; .active &gt; a &gt; [class^="icon-"],
-.nav-pills &gt; .active &gt; a &gt; [class*=" icon-"],
-.nav-list &gt; .active &gt; a &gt; [class^="icon-"],
-.nav-list &gt; .active &gt; a &gt; [class*=" icon-"],
-.navbar-inverse .nav &gt; .active &gt; a &gt; [class^="icon-"],
-.navbar-inverse .nav &gt; .active &gt; a &gt; [class*=" icon-"],
-.dropdown-menu &gt; li &gt; a:hover &gt; [class^="icon-"],
-.dropdown-menu &gt; li &gt; a:hover &gt; [class*=" icon-"],
-.dropdown-menu &gt; .active &gt; a &gt; [class^="icon-"],
-.dropdown-menu &gt; .active &gt; a &gt; [class*=" icon-"],
-.dropdown-submenu:hover &gt; a &gt; [class^="icon-"],
-.dropdown-submenu:hover &gt; a &gt; [class*=" icon-"] {
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"] {
   background-image: none;
 }
 [class^="icon-"]:before,

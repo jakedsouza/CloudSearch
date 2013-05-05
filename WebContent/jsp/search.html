@@ -3,29 +3,65 @@
 <div class="container"
 	data-bind="visible: isUserLoggedIn() && chosenPage() === 'main'">
 	<div class="row offset3">
-		<form class="navbar-search form-search ">
+		<form class="navbar-search form-search " data-bind="submit: search">
 			<div class="input-append">
-				<input type="text" class="span4" placeholder="Search">
-				<button type="button" class="btn">
+				<input type="text" class="span4" placeholder="Search"
+					id="searchInput">
+				<button type="submit" class="btn">
 					<i class="icon-search"></i>
 				</button>
 			</div>
-		
+
 		</form>
-		<div class="btn-group">
-  <button type="button" class="btn">
-					<i class="icon-search"></i>
-				</button>
-  <button class="btn dropdown-toggle" data-toggle="dropdown">
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu">
-    <li>Drive</li>
-    <li></li>
-    <li></li>
-  </ul>
-</div>
 	</div>
+	<hr />
+	<!-- Search Results -->
+	<div class="row">
+		<div data-bind="foreach: searchResults">
+			<!-- 			<div class="tile settings-card bg-color-white"> -->
+			<!-- 				<a target="_blank" -->
+			<!-- 					data-bind="attr: { href: alternateLink, title: title },text: title"> -->
+			<!-- 				</a> -->
+			<!-- 			</div> -->
+			<!-- 			<div class="settings-card tile bg-color-blueDark"> -->
+			<!-- 				<div class="media "> -->
+			<!-- 					<span class="pull-left"> <img class="media-object" -->
+			<!-- 						data-bind="attr: { src: iconLink}"> -->
+			<!-- 					</span> -->
+			<!-- 					<div class="media-body tile-content"> -->
+			<!-- 						<h4 class="media-heading" data-bind="text: title">Google -->
+			<!-- 							Drive</h4> -->
+			<!-- 						<div data-bind="text: score"></div> -->
+			<!-- 						<div> -->
+			<!-- 							<a target="_blank" -->
+			<!-- 								data-bind="attr: { href: alternateLink, title: title }" style="">Click -->
+			<!-- 								to open</a> -->
+			<!-- 						</div> -->
+			<!-- 					</div> -->
+			<!-- 				</div> -->
+			<!-- 			</div> -->
+			<div class="tile bg-color-darken settings-card">
+				<div class="tile-content">
+					<h2 data-bind="text: title"></h2>
+					<p>
+						<a target="_blank"
+							data-bind="attr: { href: alternateLink, title: title }" style="">Click
+							to open</a>
+					</p>
+					<p>Score : <span data-bind="text: score"></span></p>
+					<div class="brand">
+					<img class="icon" data-bind="attr: { src: iconLink}">
+				</div>
+				</div>
+
+				
+			</div>
+
+		</div>
+	</div>
+	<!-- /Search Results -->
+
+
 </div>
 <!-- /container -->
 <!-- /Main Search Container -->

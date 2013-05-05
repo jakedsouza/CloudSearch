@@ -71,16 +71,30 @@ public class FileService extends CloudSearchService {
 			if(code != null){
 				userId = httpRequest.getUserId();
 			}
-			GdriveDocumentMediator mediator = new GdriveDocumentMediator(
-					service, userId);
-			java.util.List<GdriveDocument> documents = mediator
-					.createIndexableDocuments();
-			mediator.sendToSearchEngine(documents);
+			Boolean success = indexDocuments(service, userId);
 			jsonMap.put("http_code", "200");
+			jsonMap.put("success", success.toString());
 			jsonMap.put("email", httpRequest.getEmail());
 			jsonMap.put("userId", httpRequest.getUserId());
+			
 			return jsonMap;
 		}
+	}
+ 
+	public static boolean indexDocuments(Drive service, String userId) {
+		GdriveDocumentMediator mediator = new GdriveDocumentMediator(service,
+				userId);
+		ArrayList<GdriveDocument> documents = mediator
+				.createIndexableDocuments();
+		System.out.println("Total Docs " + documents.size());
+		int i = 0 ;
+		for (GdriveDocument gdriveDocument : documents) {
+			System.out.println("Remaining docs : " + (documents.size()-i));
+			gdriveDocument = mediator.updateData(gdriveDocument);
+			mediator.sendToSearchEngine(gdriveDocument);
+			i++;
+		}
+		return true;
 	}
 
 	public Drive getDriveService(RequestModel req)

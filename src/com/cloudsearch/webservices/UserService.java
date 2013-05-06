@@ -30,6 +30,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet that returns the profile of the currently logged-in user.
  * 
@@ -37,6 +39,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/userService")
 public class UserService extends CloudSearchService {
+	static Logger log = Logger.getLogger(UserService.class);
 
 	/**
 	 * Returns a JSON representation of the user's profile.

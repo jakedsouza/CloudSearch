@@ -14,10 +14,13 @@
 
 package com.cloudsearch.model;
 
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.Collection;
+
+import org.apache.log4j.Logger;
 
 /**
  * An object representing the state parameter passed into this application
@@ -27,6 +30,8 @@ import java.util.Collection;
  * @author vicfryzel@google.com (Vic Fryzel)
  */
 public class State {
+	static Logger log = Logger.getLogger(State.class);
+
   /**
    * Action intended by the state.
    */

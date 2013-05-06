@@ -1,8 +1,12 @@
 package com.cloudsearch.model;
 
+import org.apache.log4j.Logger;
+
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.owlike.genson.annotation.JsonProperty;
 
 public class User {
+	static Logger log = Logger.getLogger(User.class);
 
 	String cloudSearchID;
 	@JsonProperty(value="id")

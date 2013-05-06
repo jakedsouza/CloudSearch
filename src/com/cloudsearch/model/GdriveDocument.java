@@ -6,12 +6,18 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.drive.model.File;
 import com.google.common.collect.Sets;
 import com.owlike.genson.annotation.JsonIgnore;
 
 public class GdriveDocument {
+	@JsonIgnore
+	static Logger log = Logger.getLogger(GdriveDocument.class);
+
 	@JsonIgnore
 	public static Set<String> ALLOWED_MIME_TYPES = Sets
 			.newHashSet(
@@ -29,11 +35,11 @@ public class GdriveDocument {
 
 	private String id;
 	private String title;
-	@JsonIgnore
+	
 	private String mimeType;
-	@JsonIgnore
+	
 	private String downloadURL;
-	@JsonIgnore
+	
 	private String fileExtension;
 	
 	private String data;

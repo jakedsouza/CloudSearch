@@ -35,6 +35,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
+
 /**
  * Object that manages credentials associated with this Drive application and
  * its users. Performs all OAuth 2.0 authorization, authorization code
@@ -43,6 +45,8 @@ import java.util.Collection;
  * @author vicfryzel@google.com (Vic Fryzel)
  */
 public class CredentialMediator {
+	static Logger log = Logger.getLogger(CredentialMediator.class);
+
   /**
    * The HTTP request used to make a request to this Drive application.
    * Required so that we can manage a session for the active user, and keep

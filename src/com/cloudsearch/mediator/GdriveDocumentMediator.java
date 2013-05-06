@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.log4j.Logger;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
@@ -30,6 +31,7 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.model.GdriveDocument;
 import com.cloudsearch.model.RequestModel;
 import com.cloudsearch.oauth.CredentialMediator.NoRefreshTokenException;
@@ -51,6 +53,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.reflect.VisibilityFilter;
 
 public class GdriveDocumentMediator {
+	static Logger log = Logger.getLogger(GdriveDocumentMediator.class);
 
 	private Drive drive;
 	private String userID;
@@ -101,43 +104,18 @@ public class GdriveDocumentMediator {
 
 		do {
 			try {
-				// System.out.println("Current size :" + result.size());
-
-				// request.setMaxResults(999);
-				// request.setMaxResults(Integer.MAX_VALUE);
 				FileList files = request.execute();
 				result.addAll(files.getItems());
-				// resultSet.addAll(files.getItems());
-				// List<File> list = files.getItems();
-				// for (File file : list) {
-				// hashMap.put(file.getId(),file);
-				// }
-				System.out.println(result.size());
 				request.setPageToken(files.getNextPageToken());
-				// System.out.println(resultSet.last().getTitle());
-				System.out.println(result.size());
-				// if (result.size() > 1500){
-				// System.out.println("emptying duplicates");
-				// System.out.println("Initial size - " + result.size());
-				// boolean ch = resultSet.addAll(result);
-				// System.out.println(ch);
-				// result = new ArrayList<File>();
-				// //result.clear();
-				// System.out.println("new size - " + resultSet.size());
-				// }
-
+				log.debug(result.size());
 			} catch (IOException e) {
-				System.out.println("An error occurred: " + e);
+				log.error("An error occurred: " + e);
 				request.setPageToken(null);
 			}
 		} while (request.getPageToken() != null
 				&& request.getPageToken().length() > 0);
-		System.out.println("Time to get all files "
+		log.info("Time to get all files "
 				+ (System.currentTimeMillis() - time));
-		// resultSet.addAll(result);
-		// result.clear();
-		// result.addAll(resultSet);
-		// result.addAll(hashMap.values());
 		return result;
 	}
 
@@ -146,7 +124,7 @@ public class GdriveDocumentMediator {
 		try {
 			file = drive.files().get(fileId).execute();
 		} catch (IOException e) {
-			System.out.println("An error occured: " + e);
+			log.error("An error occured: " + e);
 		}
 		return file;
 	}
@@ -167,8 +145,7 @@ public class GdriveDocumentMediator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Title: " + metadata.get("title"));
-		System.out.println("Author: " + metadata.get("Author"));
+	
 
 		String alphaAndDigits = matcher.retainFrom(textHandler.toString());
 		alphaAndDigits.toLowerCase();
@@ -228,7 +205,7 @@ public class GdriveDocumentMediator {
 	public void sendToSearchEngine(GdriveDocument document) {
 		try {
 			String url = "http://localhost:9200/";
-			url = url + userID + "/user/" + document.getId();
+			url = url + userID + "/gd/" + document.getId();
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPut putRequest = new HttpPut(url);
 			Genson genson = new Genson.Builder().setUseGettersAndSetters(false).setFieldFilter(VisibilityFilter.ALL).create();
@@ -251,9 +228,9 @@ public class GdriveDocumentMediator {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(response.getEntity().getContent())));
 			String output;
-			System.out.println("Output from Server .... \n");
+			log.info("Output from Server .... \n");
 			while ((output = br.readLine()) != null) {
-				System.out.println(output);
+				log.info(output);
 			}
 
 			httpClient.getConnectionManager().shutdown();
@@ -264,32 +241,28 @@ public class GdriveDocumentMediator {
 
 	}
 
-	public static void main(String[] args) throws NoRefreshTokenException,
-			IllegalStateException, IOException {
-		// RequestModel model = new RequestModel(null,
-		// "105248847399825755850DRIVE_SCOPE", null,
-		// "jakedsouza88@gmail.com");
-		RequestModel model = new RequestModel(null,
-				"101203193690484215892DRIVE_SCOPE", null,
-				"matthewpeter34@gmail.com");
-		FileService service = new FileService();
-		Drive drive = service.getDriveService(model);
-		GdriveDocumentMediator mediator = new GdriveDocumentMediator(drive,
-				"101203193690484215892DRIVE_SCOPE");
-		List<GdriveDocument> documents = mediator.createIndexableDocuments();
-		System.out.println(GET_ALL_MIME);
-		// File file = mediator
-		// .getFile("0AucTBT3rzeT_dDQxQW1hMjA1YmJ6WW9YNzlIZU9vcnc");
-		// GdriveDocument document = new GdriveDocument(file);
-		for (GdriveDocument gdriveDocument : documents) {
-			System.out.println(gdriveDocument.getData());
-			mediator.sendToSearchEngine(gdriveDocument);
-		}
-		// List<File> list = mediator.getAllFiles();
-		// for (File file : list) {
-		// System.out.println(file.getTitle() + "," +file.getId());
-		// }
-		// System.out.println(GET_ALL_MIME);
-	}
+//	public static void main(String[] args) throws NoRefreshTokenException,
+//			IllegalStateException, IOException {
+//		// RequestModel model = new RequestModel(null,
+//		// "105248847399825755850DRIVE_SCOPE", null,
+//		// "jakedsouza88@gmail.com");
+//		RequestModel model = new RequestModel(null,
+//				"101203193690484215892DRIVE_SCOPE", null,
+//				"matthewpeter34@gmail.com");
+//		FileService service = new FileService();
+//		Drive drive = service.getDriveService(model);
+//		GdriveDocumentMediator mediator = new GdriveDocumentMediator(drive,
+//				"101203193690484215892DRIVE_SCOPE");
+//		List<GdriveDocument> documents = mediator.createIndexableDocuments();
+//		System.out.println(GET_ALL_MIME);
+//		// File file = mediator
+//		// .getFile("0AucTBT3rzeT_dDQxQW1hMjA1YmJ6WW9YNzlIZU9vcnc");
+//		// GdriveDocument document = new GdriveDocument(file);
+//		for (GdriveDocument gdriveDocument : documents) {
+//			System.out.println(gdriveDocument.getData());
+//			mediator.sendToSearchEngine(gdriveDocument);
+//		}
+//	
+//	}
 
 }

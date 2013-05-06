@@ -1,6 +1,12 @@
 package com.cloudsearch.model;
 
+import org.apache.log4j.Logger;
+
+import com.cloudsearch.abstractwebservices.CloudSearchService;
+
 public class ResponseModel {
+	static Logger log = Logger.getLogger(ResponseModel.class);
+
 	private int code;
 	private String model;
 

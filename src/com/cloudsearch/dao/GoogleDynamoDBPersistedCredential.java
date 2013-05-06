@@ -1,12 +1,17 @@
 package com.cloudsearch.dao;
 
+import org.apache.log4j.Logger;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.google.api.client.auth.oauth2.Credential;
 
 @DynamoDBTable(tableName="cloudsearch")
 public class GoogleDynamoDBPersistedCredential {
+	static Logger log = Logger.getLogger(GoogleDynamoDBPersistedCredential.class);
+
 	private String userId;
 	private String accessToken;
 	private String refreshToken;

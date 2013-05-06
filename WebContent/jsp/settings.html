@@ -40,8 +40,8 @@
 				<div class="media-body">
 					<h4 class="media-heading">Dropbox</h4>
 					<div>
-						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
-							Connect</a>
+						<a id="connectDropbox" data-bind="click: loginDropBox, css:dbBtnClass()" class="btn "><i data-bind="css: dbIconClass()"></i>
+						<span data-bind="text: dbBtnText()"></span></a>
 					</div>
 					<div>Dropbox file storage and synchronization service.</div>
 

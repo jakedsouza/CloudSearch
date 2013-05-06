@@ -2,14 +2,19 @@ package com.cloudsearch.dao;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.CredentialStore;
 
 public class GoogleDynamoDBCredentialStore implements CredentialStore {
+	static Logger log = Logger.getLogger(GoogleDynamoDBCredentialStore.class);
+
 	private AmazonDynamoDBClient client;
 	private AWSCredentials credentials;
 

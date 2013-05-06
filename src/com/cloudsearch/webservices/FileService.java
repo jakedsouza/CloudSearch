@@ -14,6 +14,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.mediator.GdriveDocumentMediator;
 import com.cloudsearch.model.GdriveDocument;
@@ -39,19 +41,23 @@ import com.google.api.services.drive.model.FileList;
 public class FileService extends CloudSearchService {
 	// HttpServletRequest httpRequest ;
 	// HttpServletResponse httpResponse ;
+	static Logger log = Logger.getLogger(FileService.class);
 
 	@GET
 	@Path("/index")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, String> doList(@QueryParam("state") String state,
-			@QueryParam("userId") String userId,
+			@QueryParam("userId") String userId,@QueryParam("gDriveuserId") String gDriveuserId,
 			@QueryParam("code") String code, @QueryParam("email") String email)
-			throws IOException {
+					throws IOException {
 		code = (code.equals("")) ? null : code;
 		email = (email.equals("")) ? null : email;
 		userId = (userId.equals("")) ? null : userId;
+		gDriveuserId = (gDriveuserId.equals("")) ? null : gDriveuserId;
 		state = (state.equals("")) ? null : state;
-		RequestModel httpRequest = new RequestModel(state, userId, code, email);
+		RequestModel httpRequest = new RequestModel(state, gDriveuserId, code, email);
+		log.info("File service called " + httpRequest.toString());
+
 		String url = null;
 		Map<String, String> jsonMap = new HashMap<String, String>();
 
@@ -61,35 +67,37 @@ public class FileService extends CloudSearchService {
 		} catch (NoRefreshTokenException e) {
 			e.getAuthorizationUrl();
 			url = e.getAuthorizationUrl();
-			System.out.println("Sending for authorization");
+
 		}
 		if (service == null) {
 			jsonMap.put("url", url); // google authentication url
 			jsonMap.put("http_code", "307");// temporary redirect to google
+			log.info("Sending for authorization");
+			log.info(jsonMap);
 			return jsonMap;
 		} else {
-			if(code != null){
-				userId = httpRequest.getUserId();
+			if (code != null) {
+				//userId = httpRequest.getUserId();
 			}
 			Boolean success = indexDocuments(service, userId);
 			jsonMap.put("http_code", "200");
 			jsonMap.put("success", success.toString());
 			jsonMap.put("email", httpRequest.getEmail());
 			jsonMap.put("userId", httpRequest.getUserId());
-			
+			log.info("Successfully indexed :" + jsonMap);
 			return jsonMap;
 		}
 	}
- 
+
 	public static boolean indexDocuments(Drive service, String userId) {
 		GdriveDocumentMediator mediator = new GdriveDocumentMediator(service,
 				userId);
 		ArrayList<GdriveDocument> documents = mediator
 				.createIndexableDocuments();
-		System.out.println("Total Docs " + documents.size());
-		int i = 0 ;
+		log.info("Total Docs " + documents.size());
+		int i = 0;
 		for (GdriveDocument gdriveDocument : documents) {
-			System.out.println("Remaining docs : " + (documents.size()-i));
+			log.info("Remaining docs : " + (documents.size() - i));
 			gdriveDocument = mediator.updateData(gdriveDocument);
 			mediator.sendToSearchEngine(gdriveDocument);
 			i++;

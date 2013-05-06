@@ -24,15 +24,22 @@ ko.bindingHandlers.fadeVisible = {
 // login functions
 
 function decideLoginType() {
+	debugger;
 	var uri = document.URL;
 	var result = parseUri(uri);
 	var code = result.queryKey.code;
 	var state = result.queryKey.state;
+	// for dropBox
+	var oauthToken = result.queryKey.oauth_token;
+	var uid = result.queryKey.uid;
+	
 	if (result.query === "") {
 		model.gotoPage('login');
 	}
-	if (state == null) {
+	if ((state == null || state=='login')&& uid==null) {
 		state = 'login';
+	}else if(uid != null && oauthToken != null){
+		state = 'dropbox';
 	}
 
 	switch (state) {
@@ -55,6 +62,8 @@ function decideLoginType() {
 			model.gotoPage('settings');
 		}
 		break;
+	case 'dropbox':
+		loginDropBox(uid,oauthToken);
 	default:
 	//	debugger;
 	}
@@ -108,7 +117,8 @@ function loginGoogleDrive(email, gDriveuserId, code) {
 		url : 'rest/file/index',
 		data : {
 			'email' : email,
-			'userId' : gDriveuserId,
+			'userId' : localStorage.userId,			
+			'gDriveuserId' : gDriveuserId,
 			'code' : code,
 			'state' : 'gdrive'
 		},
@@ -134,6 +144,42 @@ function loginGoogleDrive(email, gDriveuserId, code) {
 
 	});
 }
+function loginDropBox(uid,oauthToken){
+	model.isUserLoggedIn(true);
+	window.history.pushState('', 'CloudSearch Login', '/#settings');
+	model.gotoPage('settings');
+	model.updateDBdata('refresh');
+	if(uid ==null){
+		$.get('rest/dropbox/getDropboxloginUrl', function(data) {
+			debugger;
+			window.location = data;
+		});
+	}else{
+		$.ajax({
+			type : 'GET',
+			url : 'rest/dropbox/index',
+			data : {
+				'uid' : uid,
+				'oauth_token' : oauthToken,
+				'userId':localStorage.userId
+			},
+			success : function(data) {
+				if (data.http_code == "200") {					
+						model.isUserLoggedIn(true);
+						window.history.pushState('', 'CloudSearch Login',
+								'/#settings');
+						//model.gotoPage('settings');
+						model.updateDBdata('connected');
+						// window.location = successFullLoginUrl;					
+				}
+			}
+
+		});
+	}
+	
+	debugger;
+}
+
 function logout() {
 	localStorage.removeItem("email");
 	localStorage.removeItem("userId");

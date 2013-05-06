@@ -14,6 +14,7 @@
 
 package com.cloudsearch.model;
 
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
 import com.google.api.services.drive.model.File.Labels;
@@ -22,6 +23,8 @@ import com.google.gson.GsonBuilder;
 
 import java.io.Reader;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 /**
  * An object representing a File and its content, for use while interacting
@@ -32,6 +35,8 @@ import java.util.List;
  * @author nivco@google.com (Nicolas Garnier)
  */
 public class ClientFile {
+	static Logger log = Logger.getLogger(ClientFile.class);
+
   /**
    * ID of file.
    */

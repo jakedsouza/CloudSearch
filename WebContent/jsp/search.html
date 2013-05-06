@@ -6,8 +6,10 @@
 		<form class="navbar-search form-search " data-bind="submit: search">
 			<div class="input-append">
 				<input type="text" class="span4" placeholder="Search"
-					id="searchInput">
-				<button type="submit" class="btn">
+					id="searchInput" data-bind="event: { keyup: search }">
+				<!-- 				<input type="text" class="span4" placeholder="Search" -->
+				<!-- 					id="searchInput"> -->
+				<button type="submit" class="btn" data-bind="click: search">
 					<i class="icon-search"></i>
 				</button>
 			</div>
@@ -16,31 +18,57 @@
 	</div>
 	<hr />
 	<!-- Search Results -->
-	<div class="row">
-		<div data-bind="foreach: searchResults">
-			<!-- 			<div class="tile settings-card bg-color-white"> -->
-			<!-- 				<a target="_blank" -->
-			<!-- 					data-bind="attr: { href: alternateLink, title: title },text: title"> -->
-			<!-- 				</a> -->
-			<!-- 			</div> -->
-			<!-- 			<div class="settings-card tile bg-color-blueDark"> -->
-			<!-- 				<div class="media "> -->
-			<!-- 					<span class="pull-left"> <img class="media-object" -->
-			<!-- 						data-bind="attr: { src: iconLink}"> -->
-			<!-- 					</span> -->
-			<!-- 					<div class="media-body tile-content"> -->
-			<!-- 						<h4 class="media-heading" data-bind="text: title">Google -->
-			<!-- 							Drive</h4> -->
-			<!-- 						<div data-bind="text: score"></div> -->
-			<!-- 						<div> -->
-			<!-- 							<a target="_blank" -->
-			<!-- 								data-bind="attr: { href: alternateLink, title: title }" style="">Click -->
-			<!-- 								to open</a> -->
-			<!-- 						</div> -->
-			<!-- 					</div> -->
-			<!-- 				</div> -->
-			<!-- 			</div> -->
-			<div class="tile bg-color-darken settings-card">
+	<div class="row" data-bind="visible: searchResults().length >0"
+		class="search-results">
+		<p class="text-right" data-bind="{text:timeTakenForSearch}"></p>
+		<table class="table  table-hover table-condensed">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Title</th>
+					<th>Last Modified Date</th>
+					<th>Score</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- ko foreach: searchResults -->
+
+				<!-- ko if: _type === 'gd'  -->
+				<tr>
+					<td><img src="img/google_drive_48.png"
+						class="img-rounded app-icon"></td>
+					<td><img class="img-rounded app-icon"
+						data-bind="attr: { src: iconLink}"> <a
+						data-bind="text: title ,attr: { href: alternateLink, title: title }"
+						target="_blank"></a></td>
+					<td><span data-bind="text: modifiedDate"></span></td>
+					<td><span data-bind="text: score"></span></td>
+				</tr>
+				<!-- /ko -->
+				<!-- ko if: _type === 'db' -->
+				<tr>
+					<td><img src="img/dropbox_48.png"
+						class="img-rounded app-icon"></td>
+					<td><img class="img-rounded app-icon"
+						data-bind="attr: { src: icon}"> <a
+						data-bind="text: name ,attr: { href: path, title: name }"
+						target="_blank"></a></td>
+					<td><span data-bind="text: modifiedDate"></span></td>
+					<td><span data-bind="text: score"></span></td>
+				</tr>
+				<!-- /ko -->
+				<!-- /ko -->
+			</tbody>
+		</table>
+
+
+
+
+
+		<!-- 	<div data-bind="foreach: searchResults ">
+			ko if: _type === 'gd' 
+
+			<div class="tile bg-color-blueDark settings-card">
 				<div class="tile-content">
 					<h2 data-bind="text: title"></h2>
 					<p>
@@ -48,16 +76,33 @@
 							data-bind="attr: { href: alternateLink, title: title }" style="">Click
 							to open</a>
 					</p>
-					<p>Score : <span data-bind="text: score"></span></p>
+					<p>
+						Score : <span data-bind="text: score"></span>
+					</p>
 					<div class="brand">
-					<img class="icon" data-bind="attr: { src: iconLink}">
+						<img class="icon" data-bind="attr: { src: iconLink}">
+					</div>
 				</div>
-				</div>
-
-				
 			</div>
-
-		</div>
+			/ko
+			ko if: _type === 'db'
+			<div class="tile bg-color-darken settings-card">
+				<div class="tile-content">
+					<h2 data-bind="text: name"></h2>
+					<p>
+						<a target="_blank" data-bind="attr: { href: path, title: name }"
+							style="">Click to open folder</a>
+					</p>
+					<p>
+						Score : <span data-bind="text: score"></span>
+					</p>
+					<div class="brand">
+						<img class="icon" data-bind="attr: { src: icon}">
+					</div>
+				</div>
+			</div>
+			/ko
+		</div> -->
 	</div>
 	<!-- /Search Results -->
 

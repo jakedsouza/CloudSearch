@@ -2,12 +2,17 @@ package com.cloudsearch.model;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.cloudsearch.abstractwebservices.CloudSearchService;
+
 public class RequestModel {
 	private String state;
 	private String userId;
 	private String code;
 	private String email;
 	private Map<String, String> parameter;
+
 	public RequestModel(String state, String userId, String code, String email) {
 		this.code = code;
 		this.email = email;
@@ -54,9 +59,26 @@ public class RequestModel {
 	public void setParameter(Map<String, String> parameter) {
 		this.parameter = parameter;
 	}
-	
+
 	public String getParameter(String key) {
 		return parameter.get(key);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RequestModel [state=");
+		builder.append(state);
+		builder.append(", userId=");
+		builder.append(userId);
+		builder.append(", code=");
+		builder.append(code);
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", parameter=");
+		builder.append(parameter);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

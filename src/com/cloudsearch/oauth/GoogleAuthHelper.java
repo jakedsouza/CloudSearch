@@ -1,5 +1,6 @@
 package com.cloudsearch.oauth;
 
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.model.User;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -18,10 +19,13 @@ import com.owlike.genson.TransformationException;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 /**
  * A helper class for Google's OAuth2 authentication API.
  */
 public final class GoogleAuthHelper {
+	static Logger log = Logger.getLogger(GoogleAuthHelper.class);
 
 	private static final String CLIENT_ID = "741352604053-7mppvnl6d0f6922amcsqia4aq9lvpodm.apps.googleusercontent.com";
 	private static final String CLIENT_SECRET = "0aXTzZoh8QkPjXltVz7c_aE6";

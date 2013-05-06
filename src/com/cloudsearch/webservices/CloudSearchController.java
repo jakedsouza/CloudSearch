@@ -9,11 +9,16 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.log4j.Logger;
+
+import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.model.User;
 import com.cloudsearch.oauth.GoogleAuthHelper;
 
 @Path("/cloud")
 public class CloudSearchController {
+	static Logger log = Logger.getLogger(CloudSearchController.class);
 
 	private @Context HttpServletRequest request ;
 	/**

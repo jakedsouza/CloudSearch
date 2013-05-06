@@ -25,8 +25,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson.JacksonFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,11 +35,14 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
 
+import org.apache.log4j.Logger;
+
 /**
  * Abstract service that sets up credentials and provides some convenience
  * methods.
  */
 public abstract class CloudSearchService {
+	static Logger log = Logger.getLogger(CloudSearchService.class);
 
 	protected static final HttpTransport TRANSPORT = new NetHttpTransport();
 	protected static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -79,7 +80,16 @@ public abstract class CloudSearchService {
 			// Required to identify the user in our data store.
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/userinfo.profile");
-
+	
+	public static final List<String> CONTACT_SCOPE = Arrays.asList(
+			// Required to access and manipulate files.
+			// "https://www.googleapis.com/auth/drive.file",
+					"https://www.google.com/m8/feeds",
+					// Required to identify the user in our data store.
+					 "https://www.googleapis.com/auth/userinfo.email",
+					 "https://www.googleapis.com/auth/userinfo.profile"
+					);
+		
 	// @Context
 	// protected
 	// ThreadLocal<HttpServletRequest> reqT;

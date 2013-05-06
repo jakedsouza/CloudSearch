@@ -16,7 +16,6 @@ body {
 	max-width: 300px;
 	padding: 19px 29px 29px;
 	margin: 10% 300px 20px;
-	
 	border: 1px solid #e5e5e5;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -44,7 +43,7 @@ body {
 }
 
 .settings-row {
-/* 	max-width: 800px; */
+	/* 	max-width: 800px; */
 	padding: 19px 29px 29px;
 	margin: 0 auto 20px;
 	border: 1px solid #e5e5e5;
@@ -57,31 +56,49 @@ body {
 }
 
 .settings-card {
-/* 	-webkit-box-shadow: 1px 1px 1px 1px #e5e5e5; */
-/* 	background-color: #ffffff; */
+	/* 	-webkit-box-shadow: 1px 1px 1px 1px #e5e5e5; */
+	/* 	background-color: #ffffff; */
 	box-shadow: 1px 1px 1px 1px #e5e5e5;
-/*  margin:10px;	  */
-box-shadow: inset 0px 1px 2px #ccc;
-outline: none;
-display: inline-block;
-margin: 10px;
-  box-shadow:inset 0px 0px 1px #ffc;
-
-/* background-color: #ececec; */
-/* box-shadow: inset 0px 1px 2px #fff; */
-/* border: 1px solid #ccc; */
-/* border-radius: 3px; */
-width:250px;
-height:150px;
-color:#FFFFFF;
+	/*  margin:10px;	  */
+	box-shadow: inset 0px 1px 2px #ccc;
+	outline: none;
+	display: inline-block;
+	margin: 10px;
+	box-shadow: inset 0px 0px 1px #ffc;
+	/* background-color: #ececec; */
+	/* box-shadow: inset 0px 1px 2px #fff; */
+	/* border: 1px solid #ccc; */
+	/* border-radius: 3px; */
+	width: 250px;
+	height: 150px;
+	color: #FFFFFF;
 }
 
-
-.media{
-	padding:15px;
+.media {
+	padding: 15px;
 }
 
 .settings-row img {
 	max-height: 48px;
 	max-width: 48px;
+}
+
+.search-card {
+	box-shadow: 1px 1px 1px 1px #E5E5E5;
+	display: inline-block;
+	background-color: steelblue;
+	color: white;
+	padding: 5px;
+	-webkit-border-radius: 3px;
+	border-collapse: collapse;
+	border-color: rgb(255, 252, 252);
+	border-collapse: collapse;
+	border-width: 1px;
+	border-style: solid;
+	height: 155px;
+}
+
+.app-icon {
+	max-height: 32px;
+	max-width: 32px;
 }

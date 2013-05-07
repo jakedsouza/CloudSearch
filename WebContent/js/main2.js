@@ -89,7 +89,8 @@ function SearchResult(data) {
 	this.id = data._id;
 	this.score = data._score;
 	if(this._type === "db" ){
-		this.modifiedDate = moment(data._source.dateModified);
+//		this.modifiedDate = moment(data._source.dateModified);
+		this.modifiedDate = data._source.dateModified;
 		this.icon = data._source.icon;
 		if(this.icon === null){
 			this.icon = "img/dropbox-api-icons/48x48/page_white48.gif";
@@ -106,7 +107,8 @@ function SearchResult(data) {
 		this.createdDate = data._source.createdDate;
 		this.exportLinks = data._source.exportLinks;
 		this.iconLink = data._source.iconLink;
-		this.modifiedDate = moment(data._source.modifiedDate);
+		//this.modifiedDate = moment(data._source.modifiedDate);
+		this.modifiedDate = data._source.modifiedDate;
 		this.thumbnailLink = data._source.thumbnailLink;
 		this.title = data._source.title;
 		this.type = data._source.type;		

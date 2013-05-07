@@ -1,6 +1,7 @@
 package com.cloudsearch.webservices;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 
 import com.cloudsearch.abstractwebservices.CloudSearchService;
+import com.cloudsearch.mediator.ContactDocumentMediator;
 import com.cloudsearch.mediator.GdriveDocumentMediator;
 import com.cloudsearch.model.GdriveDocument;
 import com.cloudsearch.model.RequestModel;
@@ -27,6 +29,7 @@ import com.google.gdata.client.contacts.ContactsService;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
+import com.google.gdata.util.common.xml.XmlWriter;
 
 @Path("/contact")
 public class ContactService extends CloudSearchService {
@@ -100,12 +103,13 @@ public class ContactService extends CloudSearchService {
 		URL feedUrl = null;
 		feedUrl = new URL(
 				"https://www.google.com/m8/feeds/contacts/default/full");
-
+		ContactDocumentMediator.printAllContacts(service);
+		
 		ContactFeed resultFeed = service.getFeed(feedUrl, ContactFeed.class);
 		
 		List<ContactEntry> contactEntries = resultFeed.getEntries();
 			for (ContactEntry contactEntry : contactEntries) {
-				System.out.println(contactEntry.getName().getFullName());
+			//	contactEntry.g
 			}
 			return true;
 	}

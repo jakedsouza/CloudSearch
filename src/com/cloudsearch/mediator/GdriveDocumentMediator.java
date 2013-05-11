@@ -1,22 +1,13 @@
 package com.cloudsearch.mediator;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,31 +15,18 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
-import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.SAXException;
-
-import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.model.GdriveDocument;
-import com.cloudsearch.model.RequestModel;
-import com.cloudsearch.oauth.CredentialMediator.NoRefreshTokenException;
-import com.cloudsearch.webservices.FileService;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.json.JsonHttpClient;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.common.base.CharMatcher;
-import com.google.common.collect.Sets;
-import com.google.gson.Gson;
 import com.owlike.genson.Genson;
 import com.owlike.genson.reflect.VisibilityFilter;
 
@@ -141,20 +119,21 @@ public class GdriveDocumentMediator {
 		try {
 			parser.parse(input, textHandler, metadata, contxt);
 			input.close();
+			String alphaAndDigits = matcher.retainFrom(textHandler.toString());
+			alphaAndDigits.toLowerCase();
+			// removes extra whitespaces (of any kind)
+			Pattern whitespace = Pattern.compile("\\s+");
+			Matcher whiteMatcher = whitespace.matcher(alphaAndDigits);
+			if (whiteMatcher.find())
+				alphaAndDigits = whiteMatcher.replaceAll(" ");
+			return alphaAndDigits;
 		} catch (Exception e) {
+			log.error("Error reading file from google drive");
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
+		return null;
 	
-
-		String alphaAndDigits = matcher.retainFrom(textHandler.toString());
-		alphaAndDigits.toLowerCase();
-		// removes extra whitespaces (of any kind)
-		Pattern whitespace = Pattern.compile("\\s+");
-		Matcher whiteMatcher = whitespace.matcher(alphaAndDigits);
-		if (whiteMatcher.find())
-			alphaAndDigits = whiteMatcher.replaceAll(" ");
-		return alphaAndDigits;
 	}
 
 	public InputStream getFileStream(String url) {
@@ -190,11 +169,13 @@ public class GdriveDocumentMediator {
 	}
 
 	public GdriveDocument updateData(GdriveDocument document) {
+		
 		if (document.getData() != null) {
 			return document;
 		}
 		String url = document.getComputedDownloadURL();
 		if (isDownloadable(document.getMimeType())) {
+			log.info("Getting data for :" +document.getTitle());
 			InputStream input = getFileStream(url);
 			String data = getFileData(input);
 			document.setData(data);
@@ -204,7 +185,8 @@ public class GdriveDocumentMediator {
 
 	public void sendToSearchEngine(GdriveDocument document) {
 		try {
-			String url = "http://localhost:9200/";
+			log.info("Sending to search engine file " + document.getTitle());
+			String url = "http://54.235.68.175:9200/";
 			url = url + userID + "/gd/" + document.getId();
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPut putRequest = new HttpPut(url);
@@ -219,11 +201,6 @@ public class GdriveDocumentMediator {
 
 			org.apache.http.HttpResponse response = httpClient
 					.execute(putRequest);
-
-			if (response.getStatusLine().getStatusCode() != 201) {
-				// throw new RuntimeException("Failed : HTTP error code : "
-				// + response.getStatusLine().getStatusCode());
-			}
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					(response.getEntity().getContent())));

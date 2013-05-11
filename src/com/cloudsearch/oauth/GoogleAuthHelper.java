@@ -30,7 +30,7 @@ public final class GoogleAuthHelper {
 	private static final String CLIENT_ID = "741352604053-7mppvnl6d0f6922amcsqia4aq9lvpodm.apps.googleusercontent.com";
 	private static final String CLIENT_SECRET = "0aXTzZoh8QkPjXltVz7c_aE6";
 
-	private final String CALLBACK_URI = "http://localhost:8080/CloudSearch/main.html";
+	private final String CALLBACK_URI = "http://http://cloudsearch.elasticbeanstalk.com/";
 	// start google authentication constants
 	private final Iterable<String> SCOPE = Arrays
 			.asList("https://www.googleapis.com/auth/userinfo.profile;https://www.googleapis.com/auth/userinfo.email"

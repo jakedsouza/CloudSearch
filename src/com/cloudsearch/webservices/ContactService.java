@@ -21,10 +21,14 @@ import com.cloudsearch.abstractwebservices.CloudSearchService;
 import com.cloudsearch.mediator.ContactDocumentMediator;
 import com.cloudsearch.mediator.GdriveDocumentMediator;
 import com.cloudsearch.model.GdriveDocument;
+import com.cloudsearch.model.GoogleContact;
 import com.cloudsearch.model.RequestModel;
 import com.cloudsearch.oauth.CredentialMediator.NoRefreshTokenException;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.drive.Drive;
+import com.google.gdata.client.AuthTokenFactory.AuthToken;
+import com.google.gdata.client.GoogleAuthTokenFactory;
+import com.google.gdata.client.GoogleAuthTokenFactory.OAuth2Token;
 import com.google.gdata.client.contacts.ContactsService;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
@@ -73,7 +77,7 @@ public class ContactService extends CloudSearchService {
 			}
 			Boolean success = null;
 			try {
-				success = indexContacts(service, userId);
+				success = indexContacts(service, userId,httpRequest.getAccessToken());
 			} catch (ServiceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -94,23 +98,30 @@ public class ContactService extends CloudSearchService {
 
 		ContactsService contactsService = new ContactsService("Cloud Search");
 		contactsService.setOAuth2Credentials(credentials);
+		req.setAccessToken(credentials.getAccessToken());
 		return contactsService;
 
 	}
 
-	public static boolean indexContacts(ContactsService service, String userId)
+	public static boolean indexContacts(ContactsService service, String userId,String accessToken)
 			throws IOException, ServiceException {
 		URL feedUrl = null;
 		feedUrl = new URL(
-				"https://www.google.com/m8/feeds/contacts/default/full");
-		ContactDocumentMediator.printAllContacts(service);
-		
+				"https://www.google.com/m8/feeds/contacts/default/full?max-results=10000");
+	//	ContactDocumentMediator.printAllContacts(service);
+		ContactDocumentMediator mediator = new ContactDocumentMediator(service,
+				userId);
 		ContactFeed resultFeed = service.getFeed(feedUrl, ContactFeed.class);
-		
 		List<ContactEntry> contactEntries = resultFeed.getEntries();
-			for (ContactEntry contactEntry : contactEntries) {
-			//	contactEntry.g
-			}
-			return true;
+		log.info("Total Contacts : " + contactEntries.size());
+		int i = 0 ;
+		for (ContactEntry contactEntry : contactEntries) {			
+			    GoogleContact c = new GoogleContact(contactEntry,accessToken);
+			System.out.println(c.getPhotoLink());
+			mediator.sendToSearchEngine(c);
+			log.info("Total Contacts : " + (contactEntries.size()-i));
+			i++;
+		}
+		return true;
 	}
 }

@@ -116,11 +116,8 @@ public class DropboxAuthHelper {
 		AccessTokenPair tokenPair = mDBApi.getSession().getAccessTokenPair();
 		try {
 			WebAuthSession session = mDBApi.getSession();
-			// WebAuthInfo info = session
-			// .getAuthInfo("http://localhost:8080/CloudSearch/rest/dropbox/download");
 			WebAuthInfo info = session
-					.getAuthInfo("http://localhost:8080/CloudSearch/");
-
+					.getAuthInfo("http://cloudsearch.elasticbeanstalk.com/");
 			// info.
 			store.store(info.requestTokenPair);
 			// inMemoryTokens.put(info.requestTokenPair.key,
@@ -278,7 +275,7 @@ public class DropboxAuthHelper {
 
 	public void sendToSearchEngine(DropBoxDocument document) {
 		try {
-			String url = "http://localhost:9200/";
+			String url = "http://54.235.68.175:9200/";
 			url = url + request.getUserId().toLowerCase() + "/db/" + document.getId();
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpPut putRequest = new HttpPut(url);

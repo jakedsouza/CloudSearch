@@ -1,8 +1,17 @@
 package com.cloudsearch.mediator;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.log4j.Logger;
+
+import com.cloudsearch.model.GdriveDocument;
+import com.cloudsearch.model.GoogleContact;
 import com.google.gdata.client.contacts.ContactsService;
 import com.google.gdata.data.Link;
 import com.google.gdata.data.contacts.ContactEntry;
@@ -13,8 +22,56 @@ import com.google.gdata.data.extensions.ExtendedProperty;
 import com.google.gdata.data.extensions.Im;
 import com.google.gdata.data.extensions.Name;
 import com.google.gdata.util.ServiceException;
+import com.owlike.genson.Genson;
+import com.owlike.genson.reflect.VisibilityFilter;
 
 public class ContactDocumentMediator {
+	static Logger log = Logger.getLogger(ContactDocumentMediator.class);
+	private ContactsService service ;
+	private String userId;
+	public ContactDocumentMediator() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public ContactDocumentMediator(ContactsService service, String userId) {
+		this.service = service;
+		this.userId = userId.toLowerCase();
+	}
+	public void sendToSearchEngine(GoogleContact contact) {
+		try {
+			log.info("Sending to contact to search engine " + contact.getName());
+			String url = "http://54.235.68.175:9200/";
+			url = url + userId + "/gc/" + contact.getId();
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpPut putRequest = new HttpPut(url);
+			Genson genson = new Genson.Builder().setUseGettersAndSetters(false).setFieldFilter(VisibilityFilter.ALL).create();
+			// genson.serialize(document);
+			// StringEntity input = new StringEntity(new
+			// Gson().toJson(document));
+			//String doc = genson.serialize(contact);
+			StringEntity input = new StringEntity(genson.serialize(contact));
+			input.setContentType("application/json");
+			putRequest.setEntity(input);
+
+			org.apache.http.HttpResponse response = httpClient
+					.execute(putRequest);
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(response.getEntity().getContent())));
+			String output;
+			log.info("Output from Server .... \n");
+			while ((output = br.readLine()) != null) {
+				log.info(output);
+			}
+
+			httpClient.getConnectionManager().shutdown();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	public static void printAllContacts(ContactsService myService)
 		    throws ServiceException, IOException {
 		  // Request the feed
@@ -76,6 +133,7 @@ public class ContactDocumentMediator {
 		    }
 		    System.out.println("Email addresses:");
 		    for (Email email : entry.getEmailAddresses()) {
+		    	
 		      System.out.print(" " + email.getAddress());
 		      if (email.getRel() != null) {
 		        System.out.print(" rel:" + email.getRel());

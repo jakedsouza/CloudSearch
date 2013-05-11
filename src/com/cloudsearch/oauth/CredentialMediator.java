@@ -341,6 +341,8 @@ public class CredentialMediator {
 		userId = userId + "USER_SCOPE";
 	}else if(scopes.equals(CloudSearchService.DRIVE_SCOPE)){
 		userId = userId + "DRIVE_SCOPE";
+	} else if(scopes.equals(CloudSearchService.CONTACT_SCOPE)){
+		userId = userId + "CONTACT_SCOPE";
 	}  
 	  return userId;  
   }

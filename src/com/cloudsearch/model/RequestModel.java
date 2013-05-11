@@ -12,7 +12,7 @@ public class RequestModel {
 	private String code;
 	private String email;
 	private Map<String, String> parameter;
-
+	private String accessToken;//used for google contacts
 	public RequestModel(String state, String userId, String code, String email) {
 		this.code = code;
 		this.email = email;
@@ -62,6 +62,14 @@ public class RequestModel {
 
 	public String getParameter(String key) {
 		return parameter.get(key);
+	}
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 
 	@Override

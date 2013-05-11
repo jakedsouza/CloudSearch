@@ -73,13 +73,14 @@
 				<span class="pull-left"> <img class="media-object"
 					src="img/google_contacts.png">
 				</span>
-				<div class="media-body">
-					<h4 class="media-heading">Google Contacts</h4>
+				<div class="media-body ">
+					<h4 class="media-heading">Google Contacts	</h4>
 					<div>
-						<a id="connectDropbox" class="btn "><i class="icon-plus-sign"></i>
-							Connect</a>
+						<a id="connectGoogleContacts" data-bind="click: loginGoogleContacts , css:gcBtnClass()"><i data-bind="css: gcIconClass()"></i>
+						<span data-bind="text: gcBtnText()"></span>
+						</a>
 					</div>
-					<div>Dropbox file storage and synchronization service.</div>
+					<div>Google Contacts</div>
 
 				</div>
 			</div>

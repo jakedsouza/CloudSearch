@@ -15,7 +15,9 @@
 			</div>
 
 		</form>
+
 	</div>
+
 	<hr />
 	<!-- Search Results -->
 	<div class="row" data-bind="visible: searchResults().length >0"
@@ -45,10 +47,60 @@
 					<td><span data-bind="text: score"></span></td>
 				</tr>
 				<!-- /ko -->
+				<!-- ko if: _type === 'gc' -->
+				<tr>
+					<td><img src="img/google_contacts.png"
+						class="img-rounded app-icon"></td>
+					<td><img class="img-rounded app-icon"
+						data-bind="attr: { src: photoLink}"> <span
+						data-bind="text: name"></span> <a type="button" class="btn pop"
+						data-bind="click: $parent.showPopOver"> View </a> <!-- 						<a href="#" -->
+						<!-- 						data-bind="bootstrapPopover : {content : name ,title:name }">Info</a> -->
+						<div class="contactCard" data-bind="attr: {'id': id}"
+							style="display: none">
+							<div class='row' style="padding: 10px">
+								<div>
+									<div class='row media' data-bind="attr: {'id': id+'_title'}">
+										<img class="img-rounded media-object"
+											data-bind="attr: { src: photoLink}">
+										<h4 class="media-heading">
+
+											<span data-bind="text: name"></span>
+										</h4>
+									</div>
+								</div>
+								<div data-bind="attr: {'id': id+'_body'}">
+									<div>  
+										<div data-bind="visible: phoneNumbers.length >0 ">
+											<h5>Phone</h5>
+											<ul data-bind="foreach: phoneNumbers">
+												<li><a data-bind="text:$data,attr: { href:'tel:'	+$data, title: $data ,target:'_blank'}"></a></li>
+											</ul>
+										</div>
+										<div data-bind="visible: ims.length >0 ">
+											<h5>IM</h5>
+											<ul data-bind="foreach: ims">
+												<li data-bind="text: $data"></li>
+
+											</ul>
+										</div>
+										<div data-bind="visible: emails.length >0 ">
+											<h5>Email</h5>
+											<ul data-bind="foreach: emails">
+												<li><a data-bind="text:$data,attr: { href:'mailto:'	+$data, title: $data ,target:'_blank'}"></a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div></td>
+					<td><span></span></td>
+					<td><span data-bind="text: score"></span></td>
+				</tr>
+				<!-- /ko -->
 				<!-- ko if: _type === 'db' -->
 				<tr>
-					<td><img src="img/dropbox_48.png"
-						class="img-rounded app-icon"></td>
+					<td><img src="img/dropbox_48.png" class="img-rounded app-icon"></td>
 					<td><img class="img-rounded app-icon"
 						data-bind="attr: { src: icon}"> <a
 						data-bind="text: name ,attr: { href: path, title: name }"
@@ -60,49 +112,35 @@
 				<!-- /ko -->
 			</tbody>
 		</table>
+	
+		<!-- 		<div class='row'> -->
+		<!-- 			<div class='row'> -->
+		<!-- 				<h4 class='text-center'> -->
+		<!-- 					<img class='img-rounded app-icon pull-left' -->
+		<!-- 						src='img/emptyContact.png'> Jake Dsouza -->
+		<!-- 				</h4> -->
+		<!-- 			</div> -->
+		<!-- 			<div class='span1'> -->
+		<!-- 				<h5>Phone</h5> -->
+		<!-- 				<ul> -->
+
+		<!-- 				</ul> -->
+		<!-- 			</div> -->
+		<!-- 			<div class='span1'> -->
+		<!-- 				<h5>IM</h5> -->
+		<!-- 				<ul> -->
+
+		<!-- 				</ul> -->
+		<!-- 			</div> -->
+		<!-- 			<div class='span1'> -->
+		<!-- 				<h5>Email</h5> -->
+		<!-- 				<ul> -->
+
+		<!-- 				</ul> -->
+		<!-- 			</div> -->
+		<!-- 		</div> -->
 
 
-
-
-
-		<!-- 	<div data-bind="foreach: searchResults ">
-			ko if: _type === 'gd' 
-
-			<div class="tile bg-color-blueDark settings-card">
-				<div class="tile-content">
-					<h2 data-bind="text: title"></h2>
-					<p>
-						<a target="_blank"
-							data-bind="attr: { href: alternateLink, title: title }" style="">Click
-							to open</a>
-					</p>
-					<p>
-						Score : <span data-bind="text: score"></span>
-					</p>
-					<div class="brand">
-						<img class="icon" data-bind="attr: { src: iconLink}">
-					</div>
-				</div>
-			</div>
-			/ko
-			ko if: _type === 'db'
-			<div class="tile bg-color-darken settings-card">
-				<div class="tile-content">
-					<h2 data-bind="text: name"></h2>
-					<p>
-						<a target="_blank" data-bind="attr: { href: path, title: name }"
-							style="">Click to open folder</a>
-					</p>
-					<p>
-						Score : <span data-bind="text: score"></span>
-					</p>
-					<div class="brand">
-						<img class="icon" data-bind="attr: { src: icon}">
-					</div>
-				</div>
-			</div>
-			/ko
-		</div> -->
 	</div>
 	<!-- /Search Results -->
 

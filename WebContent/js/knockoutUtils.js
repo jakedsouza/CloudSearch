@@ -1,3 +1,15 @@
+//ko.bindingHandlers.bootstrapPopover = {
+//    update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+//    	var id = "#"+viewModel.id;
+//    	var data = $("#"+viewModel.id).html();
+//    	
+//    	var options = valueAccessor();
+//        var defaultOptions = {content:data};
+//        options = $.extend(true, {}, defaultOptions, options);
+//        $(element).popover(options);
+//    }
+//};
+
 // Could be stored in a separate utility library
 ko.bindingHandlers.fadeVisible = {
 	init : function(element, valueAccessor) {
@@ -62,6 +74,17 @@ function decideLoginType() {
 			model.gotoPage('settings');
 		}
 		break;
+	case 'gcontacts':
+		//	debugger;
+			if (localStorage.email != null && localStorage.contactUserId != null) {
+				loginGoogleContacts(localStorage.email, localStorage.contactUserId,
+						null);
+			} else if (code != null) {
+				loginGoogleContacts(null, null, code);
+			} else {
+				model.gotoPage('settings');
+			}
+			break;	
 	case 'dropbox':
 		loginDropBox(uid,oauthToken);
 	default:
@@ -96,8 +119,8 @@ function login(email, userId, code) {
 					localStorage.userId = data.userId;
 
 					model.isUserLoggedIn(true);
-					window.history.pushState('', 'CloudSearch Login',
-							'/');
+//					window.history.pushState('', 'CloudSearch Login',
+//							'/');
 					model.gotoPage('main');
 
 					// window.location = successFullLoginUrl;
@@ -109,7 +132,7 @@ function login(email, userId, code) {
 function loginGoogleDrive(email, gDriveuserId, code) {
 
 	model.isUserLoggedIn(true);
-	window.history.pushState('', 'CloudSearch Login', '/#settings');
+	//window.history.pushState('', 'CloudSearch Login', '/#settings');
 	model.gotoPage('settings');
 	model.updateGDdata('refresh');
 	$.ajax({
@@ -133,8 +156,8 @@ function loginGoogleDrive(email, gDriveuserId, code) {
 					localStorage.gDriveuserId = data.userId;
 
 					model.isUserLoggedIn(true);
-					window.history.pushState('', 'CloudSearch Login',
-							'/#settings');
+//					window.history.pushState('', 'CloudSearch Login',
+//							'/#settings');
 					//model.gotoPage('settings');
 					model.updateGDdata('connected');
 					// window.location = successFullLoginUrl;
@@ -144,9 +167,47 @@ function loginGoogleDrive(email, gDriveuserId, code) {
 
 	});
 }
+function loginGoogleContacts(email, gContactuserId, code) {
+
+	model.isUserLoggedIn(true);
+	//window.history.pushState('', 'CloudSearch Login', '/#settings');
+	model.gotoPage('settings');
+	model.updateGCdata('refresh');
+	$.ajax({
+		type : 'GET',
+		url : 'rest/contact/index',
+		data : {
+			'email' : email,
+			'userId' : localStorage.userId,			
+			'contactUserId' : gContactuserId,
+			'code' : code,
+			'state' : 'gcontacts'
+		},
+		success : function(data) {
+			if (data.http_code == "307") {
+				var googleRedirectUrl = data.url;
+				window.location = googleRedirectUrl;
+			} else if (data.http_code == "200") {
+				if (data.email != null && data.userId != null) {
+					var successFullLoginUrl = data.url;
+					localStorage.email = data.email;
+					localStorage.gContactuserId = data.userId;
+
+					model.isUserLoggedIn(true);
+//					window.history.pushState('', 'CloudSearch Login',
+//							'/#settings');
+					//model.gotoPage('settings');
+					model.updateGCdata('connected');
+					// window.location = successFullLoginUrl;
+				}
+			}
+		}
+
+	});
+}
 function loginDropBox(uid,oauthToken){
 	model.isUserLoggedIn(true);
-	window.history.pushState('', 'CloudSearch Login', '/#settings');
+	//window.history.pushState('', 'CloudSearch Login', '/#settings');
 	model.gotoPage('settings');
 	model.updateDBdata('refresh');
 	if(uid ==null){
@@ -166,8 +227,8 @@ function loginDropBox(uid,oauthToken){
 			success : function(data) {
 				if (data.http_code == "200") {					
 						model.isUserLoggedIn(true);
-						window.history.pushState('', 'CloudSearch Login',
-								'/#settings');
+//						window.history.pushState('', 'CloudSearch Login',
+//								'/#settings');
 						//model.gotoPage('settings');
 						model.updateDBdata('connected');
 						// window.location = successFullLoginUrl;					
@@ -186,5 +247,5 @@ function logout() {
 	model.isUserLoggedIn(false);
 	model.gotoPage('login');
 
-	// window.history.pushState('', 'CloudSearch Logout', '/CloudSearch/');
+//	window.history.pushState('', 'CloudSearch Logout', '/');
 }

@@ -1,6 +1,7 @@
 package com.cloudsearch.webservices;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,7 +13,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
@@ -30,6 +35,10 @@ import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.Drive.Files.List;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.ListenableFuture;
+import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
+import com.sun.jersey.api.client.Client;
 
 /**
  * Servlet providing a small API for the DrEdit JavaScript client to use in
@@ -37,6 +46,7 @@ import com.google.api.services.drive.model.FileList;
  * Google Drive API.
  * 
  */
+
 @Path("/file")
 public class FileService extends CloudSearchService {
 	// HttpServletRequest httpRequest ;
@@ -47,15 +57,17 @@ public class FileService extends CloudSearchService {
 	@Path("/index")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Map<String, String> doList(@QueryParam("state") String state,
-			@QueryParam("userId") String userId,@QueryParam("gDriveuserId") String gDriveuserId,
-			@QueryParam("code") String code, @QueryParam("email") String email)
-					throws IOException {
+			@QueryParam("userId") String userId,
+			@QueryParam("gDriveuserId") String gDriveuserId,
+			@QueryParam("code") String code, @QueryParam("email") String email,
+			@Context UriInfo uriInfo) throws IOException {
 		code = (code.equals("")) ? null : code;
 		email = (email.equals("")) ? null : email;
 		userId = (userId.equals("")) ? null : userId;
 		gDriveuserId = (gDriveuserId.equals("")) ? null : gDriveuserId;
 		state = (state.equals("")) ? null : state;
-		RequestModel httpRequest = new RequestModel(state, gDriveuserId, code, email);
+		RequestModel httpRequest = new RequestModel(state, gDriveuserId, code,
+				email);
 		log.info("File service called " + httpRequest.toString());
 
 		String url = null;
@@ -77,11 +89,32 @@ public class FileService extends CloudSearchService {
 			return jsonMap;
 		} else {
 			if (code != null) {
-				//userId = httpRequest.getUserId();
+				// userId = httpRequest.getUserId();
 			}
-			Boolean success = indexDocuments(service, userId);
+
+			UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+			uriBuilder = uriBuilder.path("/file/indexDocs");
+			uriBuilder.queryParam("email", httpRequest.getEmail() == null ? ""
+					: httpRequest.getEmail());
+			uriBuilder.queryParam("state", httpRequest.getState() == null ? ""
+					: httpRequest.getState());
+			uriBuilder.queryParam("userId", userId == null ? "" : userId);
+			uriBuilder.queryParam("code", httpRequest.getCode() == null ? ""
+					: httpRequest.getCode());
+			uriBuilder.queryParam(
+					"gDriveuserId",
+					httpRequest.getUserId() == null ? "" : httpRequest
+							.getUserId());
+
+			URI uri = uriBuilder.build();
+			AsyncHttpClient client = new AsyncHttpClient();
+			BoundRequestBuilder builder = client.prepareGet(uri.toURL()
+					.toString());
+			ListenableFuture<com.ning.http.client.Response> resp1 = builder.execute();
+			
+			// Boolean success = indexDocuments(service, userId);
 			jsonMap.put("http_code", "200");
-			jsonMap.put("success", success.toString());
+			jsonMap.put("success", "true");
 			jsonMap.put("email", httpRequest.getEmail());
 			jsonMap.put("userId", httpRequest.getUserId());
 			log.info("Successfully indexed :" + jsonMap);
@@ -89,7 +122,34 @@ public class FileService extends CloudSearchService {
 		}
 	}
 
-	public static boolean indexDocuments(Drive service, String userId) {
+	@GET
+	@Path("/indexDocs")
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean indexDocuments(@QueryParam("state") String state,
+			@QueryParam("userId") String userId,
+			@QueryParam("gDriveuserId") String gDriveuserId,
+			@QueryParam("code") String code, @QueryParam("email") String email,
+			@Context UriInfo uriInfo) {
+
+		code = (code.equals("")) ? null : code;
+		email = (email.equals("")) ? null : email;
+		userId = (userId.equals("")) ? null : userId;
+		gDriveuserId = (gDriveuserId.equals("")) ? null : gDriveuserId;
+		state = (state.equals("")) ? null : state;
+		RequestModel httpRequest = new RequestModel(state, gDriveuserId, code,
+				email);
+		log.info("Indexing files " + httpRequest.toString());
+
+		String url = null;
+		Map<String, String> jsonMap = new HashMap<String, String>();
+
+		Drive service = null;
+		try {
+			service = getDriveService(httpRequest);
+		} catch (NoRefreshTokenException e) {
+			log.error("Auth exception");
+			return false ;
+		}
 		GdriveDocumentMediator mediator = new GdriveDocumentMediator(service,
 				userId);
 		ArrayList<GdriveDocument> documents = mediator
@@ -100,6 +160,7 @@ public class FileService extends CloudSearchService {
 			log.info("Remaining docs : " + (documents.size() - i));
 			gdriveDocument = mediator.updateData(gdriveDocument);
 			mediator.sendToSearchEngine(gdriveDocument);
+			System.gc();
 			i++;
 		}
 		return true;
